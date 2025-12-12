@@ -1,15 +1,15 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const dayNumber = process.argv[2];
 if (!dayNumber) {
-  console.error('Usage: yarn new-day <day-number>');
+  console.error("Usage: yarn new-day <day-number>");
   process.exit(1);
 }
 
-const paddedDay = dayNumber.padStart(2, '0');
+const paddedDay = dayNumber.padStart(2, "0");
 const year = new Date().getFullYear();
-const dayDir = path.join(__dirname, '..', 'src', year.toString(), paddedDay);
+const dayDir = path.join(__dirname, "..", "src", year.toString(), paddedDay);
 
 // Create directory
 if (fs.existsSync(dayDir)) {
@@ -21,7 +21,7 @@ fs.mkdirSync(dayDir, { recursive: true });
 
 // Create template files
 const templates = {
-  'PROMPT.md': `# Day ${parseInt(dayNumber)}: [Title]
+  "PROMPT.md": `# Day ${parseInt(dayNumber)}: [Title]
 
 [Paste prompt here]
 
@@ -29,19 +29,19 @@ const templates = {
 
 ## Notes
 `,
-  
-  'helpers.ts': `// Helper functions for Day ${parseInt(dayNumber)}
+
+  "helpers.ts": `// Helper functions for Day ${parseInt(dayNumber)}
 
 `,
-  
-  'helpers.test.ts': `import { } from './helpers';
+
+  "helpers.test.ts": `
 
 describe('Day ${parseInt(dayNumber)} Helpers', () => {
   // Add helper tests here
 });
 `,
-  
-  'main.ts': `import { } from './helpers';
+
+  "main.ts": `
 
 export const solve = (input: string) => {
   // TODO: Pseudocode
@@ -49,8 +49,8 @@ export const solve = (input: string) => {
   return 0;
 };
 `,
-  
-  'main.test.ts': `import { solve } from './main';
+
+  "main.test.ts": `import { solve } from './main';
 import { input } from './input';
 
 describe('Day ${parseInt(dayNumber)} - Part 1', () => {
@@ -64,8 +64,8 @@ describe('Day ${parseInt(dayNumber)} - Part 1', () => {
   });
 });
 `,
-  
-  'input.ts': `export const input = \`
+
+  "input.ts": `export const input = \`
 
 \`.trim();
 `,
