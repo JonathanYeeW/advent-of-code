@@ -1,38 +1,40 @@
-// // Helper functions for Day 2
+/**
+ * Day 2: Gift Shop - Invalid Product ID Detection
+ * 
+ * Problem: Find and sum invalid product IDs within given ranges.
+ * Invalid IDs are numbers where a digit sequence repeats exactly twice:
+ *   55 (5+5), 6464 (64+64), 123123 (123+123)
+ */
 
-// 11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
-// 1698522-1698528,446443-446449,38593856-38593862,565653-565659,
-// 824824821-824824827,2121212118-2121212124
-// (The ID ranges are wrapped here for legibility; in your input, they appear on a single long line.)
-
-// The ranges are separated by commas (,); each range gives its first ID and last ID separated by a dash (-).
-
-// Since the young Elf was just doing silly patterns, you can find the invalid IDs by looking for any ID which is made only of some sequence of digits repeated twice. So, 55 (5 twice), 6464 (64 twice), and 123123 (123 twice) would all be invalid IDs.
-
-// None of the numbers have leading zeroes; 0101 isn't an ID at all. (101 is a valid ID that you would ignore.)
-
-// Your job is to find all of the invalid IDs that appear in the given ranges. In the above example:
-
-// 11-22 has two invalid IDs, 11 and 22.
-// 95-115 has one invalid ID, 99.
-// 998-1012 has one invalid ID, 1010.
-//  has one invalid ID, 1188511885.
-//  has one invalid ID, 222222.
-//  contains no invalid IDs.
-//  has one invalid ID, 446446.
-//  has one invalid ID, 38593859.
-// The rest of the ranges contain no invalid IDs.
-// Adding up all the invalid IDs in this example produces 1227775554.
-
+/**
+ * Parses comma-separated range string into array.
+ * @param {string} input - Format: "11-22,95-115,998-1012"
+ * @returns {string[]} Array of range strings
+ */
 export const formatInput = (input: string) => {
   return input.split(",");
 };
 
+/**
+ * Extracts start and end values from a range string.
+ * @param {string} range - Format: "11-22"
+ * @returns {{ start: number, end: number }}
+ */
 export const splitRangeIndexes = (range: string) => {
   const [start, end] = range.split("-").map((a) => Number(a));
   return { start, end };
 };
 
+/**
+ * Counts the total numbers in a given range (inclusive).
+ * Unused in solution but validates range iteration logic.
+ * 
+ * @param {string} range - Format: "11-22"
+ * @returns {number} Count of numbers in the range
+ * 
+ * @example
+ * loopOverRange("11-22") // returns 12 (11 through 22 inclusive)
+ */
 export const loopOverRange = (range: string) => {
   // Step 1: get the start and end index
   const { start, end } = splitRangeIndexes(range);
@@ -44,22 +46,60 @@ export const loopOverRange = (range: string) => {
   return counter;
 };
 
+/**
+ * Splits a string into two equal halves.
+ * 
+ * @param {string} input - String to split
+ * @returns {{ start: string, end: string }} First and second half
+ * 
+ * @example
+ * getHalfsOfString("6464") // returns { start: "64", end: "64" }
+ * getHalfsOfString("1234") // returns { start: "12", end: "34" }
+ */
 export const getHalfsOfString = (input: string) => {
   const start = input.slice(0, input.length / 2);
   const end = input.slice(input.length / 2);
   return { start, end };
 };
 
+/**
+ * Checks if a number is odd.
+ * 
+ * @param {number} input - Number to check
+ * @returns {boolean} True if odd, false if even
+ */
 export const isOddNumber = (input: number) => {
   return input % 2 === 1;
 };
 
+/**
+ * Determines if a product ID is valid.
+ * 
+ * Invalid IDs have even-length digits where both halves match (e.g., 6464 = "64" + "64").
+ * Odd-length IDs are always valid (can't split evenly into repeated halves).
+ * 
+ * @param {number} productId - The product ID to validate
+ * @returns {boolean} True if valid, false if invalid
+ * 
+ * @example
+ * isValidProductId(55)      // false (5 + 5)
+ * isValidProductId(6464)    // false (64 + 64)
+ * isValidProductId(123123)  // false (123 + 123)
+ * isValidProductId(101)     // true (odd length)
+ * isValidProductId(1234)    // true (12 ≠ 34)
+ */
 export const isValidProductId = (productId: number) => {
-  if (isOddNumber(String(productId).length)) return false;
+  if (isOddNumber(String(productId).length)) return true;
   const { start, end } = getHalfsOfString(String(productId));
-  return start === end;
+  return start !== end;
 };
 
-export const getTotal = (numbers: number[]) => {
+/**
+ * Sums all numbers in an array.
+ * 
+ * @param {number[]} numbers - Array of numbers to sum
+ * @returns {number} Total sum
+ */
+export const getSumOfProductIds = (numbers: number[]) => {
   return numbers.reduce((total, current) => total + current, 0);
 };

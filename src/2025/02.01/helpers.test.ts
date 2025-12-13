@@ -1,11 +1,11 @@
 import {
   formatInput,
   getHalfsOfString,
-  getTotal,
+  getSumOfProductIds,
   isOddNumber,
-  isValidProductId,
   loopOverRange,
   splitRangeIndexes,
+  isValidProductId,
 } from "./helpers";
 
 describe("Day 2 Helpers", () => {
@@ -93,37 +93,57 @@ describe("Day 2 Helpers", () => {
     });
   });
 
-  describe("getTotal", () => {
+  describe("getSumOfProductIds", () => {
     test("empty array", () => {
-      expect(getTotal([])).toEqual(0);
+      expect(getSumOfProductIds([])).toEqual(0);
     });
     test("one index array", () => {
-      expect(getTotal([1])).toEqual(1);
+      expect(getSumOfProductIds([1])).toEqual(1);
     });
     test("two index array", () => {
-      expect(getTotal([1, 2])).toEqual(3);
+      expect(getSumOfProductIds([1, 2])).toEqual(3);
     });
     test("multiple index array", () => {
-      expect(getTotal([1, 2, 1])).toEqual(4);
+      expect(getSumOfProductIds([1, 2, 1])).toEqual(4);
     });
   });
 
-  // describe("isValidProductId", () => {
-  //   test("valid product ids", () => {
-  //     expect(isValidProductId(12)).toEqual(true);
-  //     expect(isValidProductId(123)).toEqual(true);
-  //     expect(isValidProductId(1234)).toEqual(true);
-  //     expect(isValidProductId(12432)).toEqual(true);
-  //   });
-  //   test("invalid product ids, even numbers", () => {
-  //     expect(isValidProductId(11)).toEqual(false);
-  //     expect(isValidProductId(22)).toEqual(false);
-  //     expect(isValidProductId(99)).toEqual(false);
-  //     expect(isValidProductId(1010)).toEqual(false);
-  //     expect(isValidProductId(11851185)).toEqual(false);
-  //     expect(isValidProductId(222222)).toEqual(false);
-  //     expect(isValidProductId(446446)).toEqual(false);
-  //     expect(isValidProductId(38593859)).toEqual(false);
-  //   });
-  // });
+  describe("isValidProductId", () => {
+    describe("valid product ids", () => {
+      test("single-digit numbers", () => {
+        expect(isValidProductId(0));
+        expect(isValidProductId(1));
+      });
+      test("numbers without repeating patterns", () => {
+        expect(isValidProductId(123));
+      });
+      test("numbers that have an odd number of characters", () => {
+        expect(isValidProductId(123)).toEqual(true);
+        expect(isValidProductId(100)).toEqual(true);
+        expect(isValidProductId(101)).toEqual(true);
+        expect(isValidProductId(102)).toEqual(true);
+        expect(isValidProductId(103)).toEqual(true);
+        expect(isValidProductId(104)).toEqual(true);
+        expect(isValidProductId(105)).toEqual(true);
+        expect(isValidProductId(106)).toEqual(true);
+        expect(isValidProductId(107)).toEqual(true);
+        expect(isValidProductId(108)).toEqual(true);
+        expect(isValidProductId(109)).toEqual(true);
+        expect(isValidProductId(110)).toEqual(true);
+        expect(isValidProductId(111)).toEqual(true);
+        expect(isValidProductId(112)).toEqual(true);
+        expect(isValidProductId(113)).toEqual(true);
+        expect(isValidProductId(114)).toEqual(true);
+        expect(isValidProductId(115)).toEqual(true);
+      });
+    });
+
+    describe("not valid product ids", () => {
+      test("numbers with repeating pattern", () => {
+        expect(isValidProductId(11)).toEqual(false);
+        expect(isValidProductId(22)).toEqual(false);
+        expect(isValidProductId(12341234)).toEqual(false);
+      });
+    });
+  });
 });
