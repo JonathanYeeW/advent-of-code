@@ -87,9 +87,17 @@ export const isOddNumber = (input: number) => {
  * isValidProductId(1234)    // true (12 ≠ 34)
  */
 export const isValidProductId = (productId: number) => {
-  if (isOddNumber(String(productId).length)) return true;
-  const { start, end } = getHalfsOfString(String(productId));
-  return start !== end;
+  const stringified = String(productId);
+  if (stringified.length === 1) return true;
+  // when 11 or 22, valid means they don't match
+  if (stringified.length === 2) {
+    const { start, end } = getHalfsOfString(stringified);
+    return start !== end;
+  }
+
+  const isMatching = findMatchingSubstring(String(productId));
+  if (isMatching) return false;
+  return true;
 };
 
 /**
@@ -100,4 +108,50 @@ export const isValidProductId = (productId: number) => {
  */
 export const getSumOfProductIds = (numbers: number[]) => {
   return numbers.reduce((total, current) => total + current, 0);
+};
+
+export const findMatchingSubstring = (string: string) => {
+  // edge case: when string is "11", just compare first and last
+  if (string.length === 2) {
+    const { start, end } = getHalfsOfString(string);
+    return start === end;
+  }
+
+  // edge case: when all characters are the same, return true
+  if (isAllCharactersSame(string)) return true;
+
+  // edge case: unless all characters are the same, length 3 will never match
+  if (string.length === 3) return false;
+  // Step 1: start a loop the length of string, starting index at 1
+
+  const boundary = string.length / 2;
+
+  for (let i = 2; i <= boundary; i++) {
+    // Step 2: split the string into substring and test group
+    const { substring, testGroup } = getSubstring(string, i);
+    if (substring.length > testGroup.length) return false;
+    // Step 3: if substring exists in test group, return true
+    const isMatching = hasMatchingSubstring(substring, testGroup);
+    if (isMatching) return true;
+  }
+  return false;
+};
+
+export const hasMatchingSubstring = (searchIn: string, pattern: string) => {
+  const regex = new RegExp(searchIn);
+  const result = regex.test(pattern);
+  return result;
+};
+
+export const getSubstring = (string: string, length: number) => {
+  const substring = string.slice(0, length);
+  const testGroup = string.slice(length, string.length);
+  return {
+    substring,
+    testGroup,
+  };
+};
+
+export const isAllCharactersSame = (string: string) => {
+  return string.split("").every((char) => char === string[0]);
 };
