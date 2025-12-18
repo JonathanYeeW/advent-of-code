@@ -2,13 +2,6 @@ import { solve } from "./main";
 import { input } from "./input";
 
 describe("Day 2 - Part 1", () => {
-  // test("example input, one range", () => {
-  //   const exampleInput = "11-22";
-  //   expect(solve(exampleInput)).toEqual({
-  //     total: 33,
-  //     results: [11, 22],
-  //   });
-  // });
   test("example input, one range", () => {
     const exampleInput = "99-115";
     expect(solve(exampleInput)).toEqual({

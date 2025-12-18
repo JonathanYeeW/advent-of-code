@@ -10,6 +10,7 @@ import {
   getSubstring,
   isValidProductId,
   isAllCharactersSame,
+  isOnlyMatchingSubstring,
 } from "./helpers";
 
 describe("Day 2 Helpers", () => {
@@ -18,9 +19,13 @@ describe("Day 2 Helpers", () => {
       const input = "11-22";
       expect(formatInput(input)).toEqual(["11-22"]);
     });
+    test("splits the input string correctly, single range", () => {
+      const input = "446443-446449";
+      expect(formatInput(input)).toEqual(["446443-446449"]);
+    });
     test("splits the input string correctly, multiple ranges", () => {
-      const input = "11-22,99-115";
-      expect(formatInput(input)).toEqual(["11-22", "99-115"]);
+      const input = "11-22,99-115,446443-446449";
+      expect(formatInput(input)).toEqual(["11-22", "99-115", "446443-446449"]);
     });
   });
 
@@ -46,6 +51,12 @@ describe("Day 2 Helpers", () => {
       expect(splitRangeIndexes("38593856-38593862")).toEqual({
         start: 38593856,
         end: 38593862,
+      });
+    });
+    test("splits ranges correctly, 446443-446449", () => {
+      expect(splitRangeIndexes("446443-446449")).toEqual({
+        start: 446443,
+        end: 446449,
       });
     });
   });
@@ -165,6 +176,12 @@ describe("Day 2 Helpers", () => {
         testGroup: "",
       });
     });
+    test("446443-446449", () => {
+      expect(getSubstring("446446", 2)).toEqual({
+        substring: "44",
+        testGroup: "6446",
+      });
+    });
   });
 
   describe("isAllCharactersSame", () => {
@@ -177,6 +194,15 @@ describe("Day 2 Helpers", () => {
       expect(isAllCharactersSame("11112")).toEqual(false);
       expect(isAllCharactersSame("aaabaaa")).toEqual(false);
       expect(isAllCharactersSame("zzzyzzzz")).toEqual(false);
+    });
+    test("446443-446449", () => {
+      expect(isAllCharactersSame("446443")).toEqual(false);
+      expect(isAllCharactersSame("446444")).toEqual(false);
+      expect(isAllCharactersSame("446445")).toEqual(false);
+      expect(isAllCharactersSame("446446")).toEqual(false);
+      expect(isAllCharactersSame("446447")).toEqual(false);
+      expect(isAllCharactersSame("446448")).toEqual(false);
+      expect(isAllCharactersSame("446449")).toEqual(false);
     });
   });
 
@@ -198,6 +224,19 @@ describe("Day 2 Helpers", () => {
         expect(findMatchingSubstring("122")).toEqual(false);
         expect(findMatchingSubstring("1698522")).toEqual(false);
         expect(findMatchingSubstring("1698528")).toEqual(false);
+      });
+    });
+    describe("446443-446449", () => {
+      test("finds matching substrings", () => {
+        expect(findMatchingSubstring("446446")).toEqual(true);
+      });
+      test("does not find matching substring", () => {
+        expect(findMatchingSubstring("446443")).toEqual(false);
+        // expect(findMatchingSubstring("446444")).toEqual(false);
+        // expect(findMatchingSubstring("446445")).toEqual(false);
+        // expect(findMatchingSubstring("446447")).toEqual(false);
+        // expect(findMatchingSubstring("446448")).toEqual(false);
+        // expect(findMatchingSubstring("446449")).toEqual(false);
       });
     });
   });
@@ -240,8 +279,53 @@ describe("Day 2 Helpers", () => {
       test("numbers with repeating pattern and substrings", () => {
         expect(isValidProductId(2121212121)).toEqual(false);
         expect(isValidProductId(824824824)).toEqual(false);
-        expect(isValidProductId(1212121)).toEqual(false);
+        expect(isValidProductId(12121212)).toEqual(false);
         expect(isValidProductId(565656)).toEqual(false);
+      });
+    });
+    describe("446443-446449", () => {
+      test("valid product ids", () => {
+        expect(isValidProductId(446443)).toEqual(true);
+        expect(isValidProductId(446444)).toEqual(true);
+        expect(isValidProductId(446445)).toEqual(true);
+        expect(isValidProductId(446447)).toEqual(true);
+        expect(isValidProductId(446448)).toEqual(true);
+        expect(isValidProductId(446449)).toEqual(true);
+      });
+      test("not valid product ids", () => {
+        expect(isValidProductId(446446)).toEqual(false);
+      });
+    });
+  });
+
+  describe("isOnlyMatchingSubstring", () => {
+    describe("returns true for matching case", () => {
+      test("returns true for simple pattern", () => {
+        expect(
+          isOnlyMatchingSubstring({ searchIn: "aa", pattern: "a" })
+        ).toEqual(true);
+      });
+      test("returns true for complex pattern", () => {
+        expect(
+          isOnlyMatchingSubstring({ searchIn: "abab", pattern: "ab" })
+        ).toEqual(true);
+      });
+    });
+    describe("returns false for mismatched cases", () => {
+      test("return false for simple pattern", () => {
+        expect(
+          isOnlyMatchingSubstring({ searchIn: "aa", pattern: "b" })
+        ).toEqual(false);
+      });
+      test("return false for complex pattern", () => {
+        expect(
+          isOnlyMatchingSubstring({ searchIn: "abba", pattern: "ab" })
+        ).toEqual(false);
+      });
+      test("return false for partially matched pattern", () => {
+        expect(
+          isOnlyMatchingSubstring({ searchIn: "abba", pattern: "bb" })
+        ).toEqual(false);
       });
     });
   });
